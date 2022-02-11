@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.api.parkingcontrol.dto.ParkingSpotDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -53,4 +55,14 @@ public class ParkingSpotModel implements Serializable {
 
 	@Column(nullable = false, length = 30)
 	private String block;
+
+	public void parkingSpotDtoToModel(ParkingSpotDto parkingSpotDto) {
+		parkingSpotNumber = parkingSpotDto.getParkingSpotNumber();
+		licensePlateCar = parkingSpotDto.getLicensePlateCar();
+		brandCar = parkingSpotDto.getBrandCar();
+		colorCar = parkingSpotDto.getColorCar();
+		responsibileName = parkingSpotDto.getResponsibileName();
+		apartment = getApartment();
+		block = parkingSpotDto.getBlock();
+	}
 }

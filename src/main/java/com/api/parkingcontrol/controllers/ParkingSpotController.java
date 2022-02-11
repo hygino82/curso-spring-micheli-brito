@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,16 +69,44 @@ public class ParkingSpotController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotOptional.get());
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteParkingspotById(@PathVariable(value = "id") UUID id){
+	public ResponseEntity<Object> deleteParkingspotById(@PathVariable(value = "id") UUID id) {
 		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
 		if (!parkingSpotOptional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Park spot no found!");
 		}
 		parkingSpotService.delete(parkingSpotOptional.get());
-		
-		return ResponseEntity.status(HttpStatus.OK).body("Parking spot deleted successfully");	
+
+		return ResponseEntity.status(HttpStatus.OK).body("Parking spot deleted successfully");
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Object> updateParkingspotById(@PathVariable(value = "id") UUID id,
+			@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
+		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
+		if (!parkingSpotOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Park spot no found!");
+		}
+
+		var parkingSpotModel = parkingSpotOptional.get(); // new ParkingSpotModel(); pegamos o valor encontrado em
+															// parkingSpotOptional
+		// dessa forma já pega o id e a data do registro
+		//porém ter de setar os outros atributos
+		parkingSpotModel.setParkingSpotNumber(parkingSpotDto.getParkingSpotNumber());
+		parkingSpotModel.setLicensePlateCar(parkingSpotDto.getLicensePlateCar());
+		parkingSpotModel.setModelCar(parkingSpotDto.getModelCar());
+		parkingSpotModel.setBrandCar(parkingSpotDto.getBrandCar());
+		parkingSpotModel.setColorCar(parkingSpotDto.getColorCar());
+		parkingSpotModel.setResponsibileName(parkingSpotDto.getResponsibileName());
+		parkingSpotModel.setApartment(parkingSpotDto.getApartment());
+		parkingSpotModel.setBlock(parkingSpotDto.getBlock());
+		//parkingSpotModel.parkingSpotDtoToModel(parkingSpotDto);
+//		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);//copia os dados de um objeto para o outro
+//		parkingSpotModel.setId(parkingSpotOptional.get().getId());
+//		parkingSpotModel.setRegistrationDate(parkingSpotOptional.get().getRegistrationDate());
+
+		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.save(parkingSpotModel));
 	}
 
 }
