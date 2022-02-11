@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,12 +61,23 @@ public class ParkingSpotController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> findParkingspotBy(@PathVariable(value = "id") UUID id) {
+	public ResponseEntity<Object> findParkingSpotById(@PathVariable(value = "id") UUID id) {
 		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
 		if (!parkingSpotOptional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Park spot no found!");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotOptional.get());
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteParkingspotById(@PathVariable(value = "id") UUID id){
+		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
+		if (!parkingSpotOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Park spot no found!");
+		}
+		parkingSpotService.delete(parkingSpotOptional.get());
+		
+		return ResponseEntity.status(HttpStatus.OK).body("Parking spot deleted successfully");	
 	}
 
 }
