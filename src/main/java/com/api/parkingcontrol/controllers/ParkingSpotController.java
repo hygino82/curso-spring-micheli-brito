@@ -89,22 +89,11 @@ public class ParkingSpotController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Park spot no found!");
 		}
 
-		var parkingSpotModel = parkingSpotOptional.get(); // new ParkingSpotModel(); pegamos o valor encontrado em
-															// parkingSpotOptional
-		// dessa forma já pega o id e a data do registro
-		//porém ter de setar os outros atributos
-		parkingSpotModel.setParkingSpotNumber(parkingSpotDto.getParkingSpotNumber());
-		parkingSpotModel.setLicensePlateCar(parkingSpotDto.getLicensePlateCar());
-		parkingSpotModel.setModelCar(parkingSpotDto.getModelCar());
-		parkingSpotModel.setBrandCar(parkingSpotDto.getBrandCar());
-		parkingSpotModel.setColorCar(parkingSpotDto.getColorCar());
-		parkingSpotModel.setResponsibileName(parkingSpotDto.getResponsibileName());
-		parkingSpotModel.setApartment(parkingSpotDto.getApartment());
-		parkingSpotModel.setBlock(parkingSpotDto.getBlock());
-		//parkingSpotModel.parkingSpotDtoToModel(parkingSpotDto);
-//		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);//copia os dados de um objeto para o outro
-//		parkingSpotModel.setId(parkingSpotOptional.get().getId());
-//		parkingSpotModel.setRegistrationDate(parkingSpotOptional.get().getRegistrationDate());
+		var parkingSpotModel = new ParkingSpotModel(); 
+	
+		BeanUtils.copyProperties(parkingSpotDto, parkingSpotModel);//copia os dados de um objeto para o outro
+		parkingSpotModel.setId(parkingSpotOptional.get().getId());
+		parkingSpotModel.setRegistrationDate(parkingSpotOptional.get().getRegistrationDate());
 
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.save(parkingSpotModel));
 	}
