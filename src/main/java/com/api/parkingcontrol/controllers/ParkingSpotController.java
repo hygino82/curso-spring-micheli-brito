@@ -26,6 +26,10 @@ import com.api.parkingcontrol.dto.ParkingSpotDto;
 import com.api.parkingcontrol.models.ParkingSpotModel;
 import com.api.parkingcontrol.services.ParkingSpotService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/parking-spot")
@@ -35,6 +39,8 @@ public class ParkingSpotController {
 	private ParkingSpotService parkingSpotService;
 
 	@PostMapping
+	@ApiOperation(value = "Salvar uma vaga de estacionamento")
+	@ApiResponses({@ApiResponse(code = 201, message = "Vaga de estacionamento salva com sucesso!")})
 	public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
 
 		if (parkingSpotService.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())) {
@@ -57,11 +63,13 @@ public class ParkingSpotController {
 	}
 
 	@GetMapping
+	@ApiOperation(value = "Listar todas as vagas de estacionamento")
 	public ResponseEntity<List<ParkingSpotModel>> getAllParkingSpot() {
 		return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
 	}
 
 	@GetMapping("/{id}")
+	@ApiOperation(value = "Procurar uma vaga de estacionamento usando Id")
 	public ResponseEntity<Object> findParkingSpotById(@PathVariable(value = "id") UUID id) {
 		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
 		if (!parkingSpotOptional.isPresent()) {
@@ -71,6 +79,7 @@ public class ParkingSpotController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Deletar uma vaga de estacionamento usando Id")
 	public ResponseEntity<Object> deleteParkingspotById(@PathVariable(value = "id") UUID id) {
 		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
 		if (!parkingSpotOptional.isPresent()) {
@@ -82,6 +91,7 @@ public class ParkingSpotController {
 	}
 
 	@PutMapping("/{id}")
+	@ApiOperation(value = "Atualizar uma vaga de estacionamento usando Id")
 	public ResponseEntity<Object> updateParkingspotById(@PathVariable(value = "id") UUID id,
 			@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
 		Optional<ParkingSpotModel> parkingSpotOptional = parkingSpotService.findById(id);
